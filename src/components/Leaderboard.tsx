@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchTeams } from "../api/teamsApi";
 import { useEffect } from "react";
+import { IconExternalLink } from "@tabler/icons-react";
 
 export function Leaderboard() {
 	console.log("Leaderboard component rendering");
@@ -43,7 +44,7 @@ export function Leaderboard() {
 			}}
 		>
 			<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-				<h1 style={{ marginTop: 0, color: "#333" }}>Hackathon Leaderboard</h1>
+				<h2 style={{ marginTop: 0, color: "#333" }}>Hackathon Leaderboard</h2>
 				<button
 					onClick={() => refetch()}
 					disabled={isLoading}
@@ -62,6 +63,29 @@ export function Leaderboard() {
 				>
 					{isLoading ? "Fetching..." : "Refetch Data"}
 				</button>
+				<a
+					href="https://apps.ots.space/hackathon-2026/teams"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<button
+						onClick={() => refetch()}
+						disabled={isLoading}
+						style={{
+							padding: "10px 20px",
+							marginBottom: "20px",
+							backgroundColor: "#007bff",
+							color: "white",
+							border: "none",
+							borderRadius: "4px",
+							fontSize: "14px",
+							fontWeight: "bold",
+							marginLeft: "8px",
+						}}
+					>
+						Open Teams Page
+					</button>
+				</a>
 
 				{error && (
 					<div
@@ -177,7 +201,18 @@ export function Leaderboard() {
 											fontWeight: "bold",
 										}}
 									>
-										Members
+										Team Members
+									</th>
+									<th
+										style={{
+											padding: "12px",
+											textAlign: "center",
+											borderBottom: "2px solid #ddd",
+											color: "white",
+											fontWeight: "bold",
+										}}
+									>
+										Action
 									</th>
 								</tr>
 							</thead>
@@ -233,9 +268,47 @@ export function Leaderboard() {
 												{team.voteCount}
 											</span>
 										</td>
-										<td style={{ padding: "12px", color: "#333" }}>
-											{team.members.length}
-										</td>
+										<td style={{ padding: "12px", color: "#666" }}>
+											{team.members.map((member, idx) => (
+												<span key={idx}>
+													<span
+														style={{
+															color: member.isLeader ? "#dc3545" : "#666",
+															fontWeight: member.isLeader ? 600 : "normal",
+														}}
+													>
+														{member.fullName}
+													</span>
+													{idx < team.members.length - 1 && ", "}
+												</span>
+											))}
+										</td>{" "}
+										<td style={{ padding: "12px", textAlign: "center" }}>
+											<a
+												href={`https://apps.ots.space/hackathon-2026/teams/${team.id}`}
+												target="_blank"
+												rel="noopener noreferrer"
+												style={{
+													display: "inline-flex",
+													alignItems: "center",
+													justifyContent: "center",
+													padding: "8px",
+													backgroundColor: "#007bff",
+													color: "white",
+													borderRadius: "4px",
+													textDecoration: "none",
+													transition: "background-color 0.2s",
+												}}
+												onMouseEnter={(e) => {
+													e.currentTarget.style.backgroundColor = "#0056b3";
+												}}
+												onMouseLeave={(e) => {
+													e.currentTarget.style.backgroundColor = "#007bff";
+												}}
+											>
+												<IconExternalLink size={18} />
+											</a>
+										</td>{" "}
 									</tr>
 								))}
 							</tbody>
