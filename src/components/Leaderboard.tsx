@@ -60,95 +60,133 @@ export function Leaderboard() {
 			}}
 		>
 			<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-				<h2 style={{ marginTop: 0, color: "#333" }}>Hackathon Leaderboard</h2>
+				<h2 style={{ marginTop: 0, color: "#333" }}>
+					OTSV Hackathon 2026 Leaderboard
+				</h2>
 				<div
 					style={{
 						display: "flex",
+						justifyContent: "space-between",
 						gap: "8px",
 						marginBottom: "16px",
 						flexWrap: "wrap",
 					}}
 				>
-					<button
-						onClick={() => setViewMode("all")}
-						disabled={isLoading && viewMode === "all"}
+					<div
 						style={{
-							padding: "10px 20px",
-							backgroundColor: viewMode === "all" ? "#0056b3" : "#007bff",
-							color: "white",
-							border: "none",
-							borderRadius: "4px",
-							cursor:
-								isLoading && viewMode === "all" ? "not-allowed" : "pointer",
-							opacity: isLoading && viewMode === "all" ? 0.7 : 1,
-							fontSize: "14px",
-							fontWeight: "bold",
+							display: "flex",
+							gap: "8px",
+							flexWrap: "wrap",
 						}}
 					>
-						{viewMode === "all" && (isLoading || isFetching)
-							? "Loading All..."
-							: "All Teams"}
-					</button>
-					<button
-						onClick={() => setViewMode("top15")}
-						disabled={isLoading && viewMode === "top15"}
+						<button
+							onClick={() => setViewMode("all")}
+							disabled={isLoading && viewMode === "all"}
+							style={{
+								padding: "10px 20px",
+								backgroundColor: viewMode === "all" ? "#0056b3" : "#007bff",
+								color: "white",
+								border: "none",
+								borderRadius: "4px",
+								cursor:
+									isLoading && viewMode === "all" ? "not-allowed" : "pointer",
+								opacity: isLoading && viewMode === "all" ? 0.7 : 1,
+								fontSize: "14px",
+								fontWeight: "bold",
+							}}
+						>
+							{viewMode === "all" && (isLoading || isFetching)
+								? "Loading All..."
+								: "All Teams"}
+						</button>
+						<button
+							onClick={() => setViewMode("top15")}
+							disabled={isLoading && viewMode === "top15"}
+							style={{
+								padding: "10px 20px",
+								backgroundColor: viewMode === "top15" ? "#0056b3" : "#007bff",
+								color: "white",
+								border: "none",
+								borderRadius: "4px",
+								cursor:
+									isLoading && viewMode === "top15" ? "not-allowed" : "pointer",
+								opacity: isLoading && viewMode === "top15" ? 0.7 : 1,
+								fontSize: "14px",
+								fontWeight: "bold",
+							}}
+						>
+							{viewMode === "top15" && (isLoading || isFetching)
+								? "Loading Top 15..."
+								: "Fetch Top 15"}
+						</button>
+						<button
+							onClick={() => refetch()}
+							disabled={isLoading || isFetching}
+							style={{
+								padding: "10px 20px",
+								backgroundColor: "#007bff",
+								color: "white",
+								border: "none",
+								borderRadius: "4px",
+								cursor: isLoading || isFetching ? "not-allowed" : "pointer",
+								opacity: isLoading || isFetching ? 0.5 : 1,
+								fontSize: "14px",
+								fontWeight: "bold",
+							}}
+						>
+							{isLoading || isFetching ? "Fetching..." : "Refresh"}
+						</button>
+					</div>
+					<div
 						style={{
-							padding: "10px 20px",
-							backgroundColor: viewMode === "top15" ? "#0056b3" : "#007bff",
-							color: "white",
-							border: "none",
-							borderRadius: "4px",
-							cursor:
-								isLoading && viewMode === "top15" ? "not-allowed" : "pointer",
-							opacity: isLoading && viewMode === "top15" ? 0.7 : 1,
-							fontSize: "14px",
-							fontWeight: "bold",
+							display: "flex",
+							justifyContent: "flex-end",
+							gap: "8px",
 						}}
 					>
-						{viewMode === "top15" && (isLoading || isFetching)
-							? "Loading Top 15..."
-							: "Fetch Top 15"}
-					</button>
-					<button
-						onClick={() => refetch()}
-						disabled={isLoading || isFetching}
-						style={{
-							padding: "10px 20px",
-							backgroundColor: "#6c757d",
-							color: "white",
-							border: "none",
-							borderRadius: "4px",
-							cursor: isLoading || isFetching ? "not-allowed" : "pointer",
-							opacity: isLoading || isFetching ? 0.5 : 1,
-							fontSize: "14px",
-							fontWeight: "bold",
-						}}
-					>
-						{isLoading || isFetching ? "Fetching..." : "Refresh"}
-					</button>
-					<a
-						href="https://apps.ots.space/hackathon-2026/teams"
-						target="_blank"
-						rel="noopener noreferrer"
-						onClick={() => refetch()}
-						style={{
-							display: "inline-flex",
-							alignItems: "center",
-							justifyContent: "center",
-							padding: "10px 20px",
-							backgroundColor: "#007bff",
-							color: "white",
-							border: "none",
-							borderRadius: "4px",
-							fontSize: "14px",
-							fontWeight: "bold",
-							marginLeft: "8px",
-							textDecoration: "none",
-							height: "100%",
-						}}
-					>
-						Open Teams Page
-					</a>
+						<a
+							href="https://apps.ots.space/hackathon-2026/teams"
+							target="_blank"
+							rel="noopener noreferrer"
+							onClick={() => refetch()}
+							style={{
+								display: "inline-flex",
+								alignItems: "center",
+								justifyContent: "center",
+								padding: "10px 20px",
+								backgroundColor: "#007bff",
+								color: "white",
+								border: "none",
+								borderRadius: "4px",
+								fontSize: "14px",
+								fontWeight: "bold",
+								textDecoration: "none",
+							}}
+						>
+							Open Teams Page
+						</a>
+						<a
+							href="https://apps.ots.space/hackathon-2026/teams/82W5JVx37e3v0TWM9dTU"
+							target="_blank"
+							rel="noopener noreferrer"
+							onClick={() => refetch()}
+							style={{
+								display: "inline-flex",
+								alignItems: "center",
+								justifyContent: "center",
+								padding: "10px 20px",
+								backgroundColor: "#ff002f",
+								color: "white",
+								border: "none",
+								borderRadius: "4px",
+								fontSize: "14px",
+								fontWeight: "bold",
+								textDecoration: "none",
+							}}
+						>
+							Vote for MDS team - ONE Life
+						</a>
+					</div>
 				</div>
 				<div style={{ marginBottom: "12px", color: "#555", fontSize: "13px" }}>
 					Showing: {viewMode === "top15" ? "Top 15 by votes" : "All teams"}
