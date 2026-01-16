@@ -1,26 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchTeams } from "../api/teamsApi";
-import { useEffect } from "react";
+import { fetchTeams, fetchTeamsTop15 } from "../api/teamsApi";
+import { useEffect, useState } from "react";
+import type { Team } from "../types";
 import { IconExternalLink } from "@tabler/icons-react";
 
 export function Leaderboard() {
 	console.log("Leaderboard component rendering");
 
+	const [viewMode, setViewMode] = useState<"all" | "top15">("all");
+
 	const {
 		data: teams = [],
 		isLoading,
+		isFetching,
 		error,
 		refetch,
-	} = useQuery({
-		queryKey: ["teams"],
-		queryFn: fetchTeams,
+	} = useQuery<Team[], Error>({
+		queryKey: ["teams", viewMode] as const,
+		queryFn: () => (viewMode === "top15" ? fetchTeamsTop15() : fetchTeams()),
 		retry: 3,
 		retryDelay: 1000,
+		placeholderData: (prevData) => prevData ?? [],
 	});
 
 	useEffect(() => {
-		console.log("Teams data:", teams, "Loading:", isLoading, "Error:", error);
-	}, [teams, isLoading, error]);
+		console.log(
+			"Teams data:",
+			teams,
+			"Loading:",
+			isLoading,
+			"Fetching:",
+			isFetching,
+			"Error:",
+			error,
+			"View:",
+			viewMode
+		);
+	}, [teams, isLoading, isFetching, error, viewMode]);
 
 	const sortedTeams =
 		teams && teams.length > 0
@@ -45,35 +61,81 @@ export function Leaderboard() {
 		>
 			<div style={{ maxWidth: "1200px", margin: "0 auto" }}>
 				<h2 style={{ marginTop: 0, color: "#333" }}>Hackathon Leaderboard</h2>
-				<button
-					onClick={() => refetch()}
-					disabled={isLoading}
+				<div
 					style={{
-						padding: "10px 20px",
-						marginBottom: "20px",
-						backgroundColor: "#007bff",
-						color: "white",
-						border: "none",
-						borderRadius: "4px",
-						cursor: isLoading ? "not-allowed" : "pointer",
-						opacity: isLoading ? 0.5 : 1,
-						fontSize: "14px",
-						fontWeight: "bold",
+						display: "flex",
+						gap: "8px",
+						marginBottom: "16px",
+						flexWrap: "wrap",
 					}}
 				>
-					{isLoading ? "Fetching..." : "Refetch Data"}
-				</button>
-				<a
-					href="https://apps.ots.space/hackathon-2026/teams"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
 					<button
-						onClick={() => refetch()}
-						disabled={isLoading}
+						onClick={() => setViewMode("all")}
+						disabled={isLoading && viewMode === "all"}
 						style={{
 							padding: "10px 20px",
-							marginBottom: "20px",
+							backgroundColor: viewMode === "all" ? "#0056b3" : "#007bff",
+							color: "white",
+							border: "none",
+							borderRadius: "4px",
+							cursor:
+								isLoading && viewMode === "all" ? "not-allowed" : "pointer",
+							opacity: isLoading && viewMode === "all" ? 0.7 : 1,
+							fontSize: "14px",
+							fontWeight: "bold",
+						}}
+					>
+						{viewMode === "all" && (isLoading || isFetching)
+							? "Loading All..."
+							: "All Teams"}
+					</button>
+					<button
+						onClick={() => setViewMode("top15")}
+						disabled={isLoading && viewMode === "top15"}
+						style={{
+							padding: "10px 20px",
+							backgroundColor: viewMode === "top15" ? "#0056b3" : "#007bff",
+							color: "white",
+							border: "none",
+							borderRadius: "4px",
+							cursor:
+								isLoading && viewMode === "top15" ? "not-allowed" : "pointer",
+							opacity: isLoading && viewMode === "top15" ? 0.7 : 1,
+							fontSize: "14px",
+							fontWeight: "bold",
+						}}
+					>
+						{viewMode === "top15" && (isLoading || isFetching)
+							? "Loading Top 15..."
+							: "Fetch Top 15"}
+					</button>
+					<button
+						onClick={() => refetch()}
+						disabled={isLoading || isFetching}
+						style={{
+							padding: "10px 20px",
+							backgroundColor: "#6c757d",
+							color: "white",
+							border: "none",
+							borderRadius: "4px",
+							cursor: isLoading || isFetching ? "not-allowed" : "pointer",
+							opacity: isLoading || isFetching ? 0.5 : 1,
+							fontSize: "14px",
+							fontWeight: "bold",
+						}}
+					>
+						{isLoading || isFetching ? "Fetching..." : "Refresh"}
+					</button>
+					<a
+						href="https://apps.ots.space/hackathon-2026/teams"
+						target="_blank"
+						rel="noopener noreferrer"
+						onClick={() => refetch()}
+						style={{
+							display: "inline-flex",
+							alignItems: "center",
+							justifyContent: "center",
+							padding: "10px 20px",
 							backgroundColor: "#007bff",
 							color: "white",
 							border: "none",
@@ -81,11 +143,16 @@ export function Leaderboard() {
 							fontSize: "14px",
 							fontWeight: "bold",
 							marginLeft: "8px",
+							textDecoration: "none",
+							height: "100%",
 						}}
 					>
 						Open Teams Page
-					</button>
-				</a>
+					</a>
+				</div>
+				<div style={{ marginBottom: "12px", color: "#555", fontSize: "13px" }}>
+					Showing: {viewMode === "top15" ? "Top 15 by votes" : "All teams"}
+				</div>
 
 				{error && (
 					<div
